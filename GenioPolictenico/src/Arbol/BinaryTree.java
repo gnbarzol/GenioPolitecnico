@@ -69,5 +69,10 @@ public class BinaryTree<E> {
         if(n==null) return 0;
         return 1+ Math.max(height(n.getLeft()), height(n.getRight()));
     }
+
+    public Node<E> getRoot() {
+        return root;
+    }
+    
     
 }

@@ -20,15 +20,15 @@ import java.util.List;
  * @author user
  */
 public class Adivinador {
-    private Node n;
     private BinaryTree arbol;
 
+    
     public Adivinador() {
         this.arbol = new BinaryTree(cargarArbol(leerArchivo()));
         
     }
     
-    public List<String> leerArchivo(){
+    public final List<String> leerArchivo(){
         List<String> data= new ArrayList();
         try(BufferedReader br= new BufferedReader(new FileReader("src/Recursos/datos-1.txt"))){
             String linea;
@@ -43,7 +43,8 @@ public class Adivinador {
         return data;
     }
     
-    public Node cargarArbol(List<String> lista){
+    
+    public final Node cargarArbol(List<String> lista){
         Deque<Node> pila = new LinkedList<>();
         for(int i=0; i<lista.size();i++){
             String elemento = lista.get(i);
@@ -67,19 +68,32 @@ public class Adivinador {
         return arbol;
     }
     
-    public void guardarArbol(Node<String> n, String pregunta, String respuesta, String bool){
-        Node<String> p= new Node<>(pregunta);
+    /**
+     * 
+     * @param node Es el nodo que va a ser sustituido por el nuevo subArbol creado
+     * @param pregunta Es la pregunta que el usuario formula para identificar la respuesta(Nueva Raiz)
+     * @param respuesta, es la respuesta(Hoja) de la nueva raiz formada de la pregunta
+     * @param bool, es la respuesta del usuario ante un pregunta( SI , NO)
+     */
+    public void actualizarNodos(Node<String> node, String pregunta, String respuesta, String bool){
+        Node<String> antiguoNode= new Node<>(node.getData());
         Node<String> r= new Node<>(respuesta);
+        node.setData(pregunta);
         if(bool.equals("SI")){
-            p.setLeft(r);
-            p.setRight(n);
+            node.setLeft(r);
+            node.setRight(antiguoNode);
         }else{
-           p.setRight(r);
-           p.setLeft(n);   
-        }
-        n=p;
-        n.setData(p.getData());
-        
+            node.setRight(r);
+            node.setLeft(antiguoNode);            
+        } 
         
     }
+    
+    
+    public void guardarArbol(BinaryTree arbol){
+        //Metodo que leerla el arbol pasado por parametro en pos-orden
+        // y lo añadira al archivo de datos-1.txt.
+    }
+    
+    
 }
