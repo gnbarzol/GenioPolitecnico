@@ -24,12 +24,13 @@ public class Adivinador {
     private BinaryTree arbol;
 
     public Adivinador() {
-        this.arbol =cargarArbol(leerArchivo());
+        this.arbol = new BinaryTree(cargarArbol(leerArchivo()));
+        
     }
     
     public List<String> leerArchivo(){
         List<String> data= new ArrayList();
-        try(BufferedReader br= new BufferedReader(new FileReader("src/resources/datos-1.txt"))){
+        try(BufferedReader br= new BufferedReader(new FileReader("src/Recursos/datos-1.txt"))){
             String linea;
             while((linea=br.readLine())!=null){
                    data.add(linea);
@@ -42,13 +43,31 @@ public class Adivinador {
         return data;
     }
     
-    public BinaryTree cargarArbol(List<String> lista){
-        Deque pila=new LinkedList();
+    public Node cargarArbol(List<String> lista){
+        Deque<Node> pila = new LinkedList<>();
         for(int i=0; i<lista.size();i++){
-            String tipo;
-            String cadena;
+            String elemento = lista.get(i);
+            String tipo = elemento.substring(0, 2);
+            String data = elemento.substring(2).trim();
+            Node<String> node = new Node<>(data);
+            if(tipo.equals("#R"))
+                pila.offer(node);
+            else{   
+                Node<String> right = pila.poll();
+                Node<String> left = pila.poll();
+                node.setLeft(left);
+                node.setRight(right);
+                pila.offer(node);
+            }
         }
+        Node<String> fin = pila.poll();
+        System.out.println(fin.getLeft().getData()+","+fin.getRight().getData());
+        return fin;
     }
 
+    public static void main(String[] arg){
+        Adivinador ad = new Adivinador();
+        
+    }
     
 }

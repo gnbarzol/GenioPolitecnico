@@ -1,5 +1,7 @@
 package Arbol;
 
+import java.io.IOException;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -15,6 +17,10 @@ public class BinaryTree<E> {
     
     public BinaryTree(){
         this.root = null;
+    }
+    
+    public BinaryTree(Node<E> root){
+        this.root = root;
     }
     
     public boolean isEmpty(){
@@ -58,8 +64,10 @@ public class BinaryTree<E> {
     public int height(){
         return height(root);
     }
+    
     private int height(Node<E> n){
         if(n==null) return 0;
         return 1+ Math.max(height(n.getLeft()), height(n.getRight()));
     }
+    
 }
