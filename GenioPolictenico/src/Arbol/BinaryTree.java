@@ -27,7 +27,7 @@ public class BinaryTree<E> {
         return this.root==null;
     }
     
-    private Node<E> searchNode(E data){
+    public Node<E> searchNode(E data){
         return searchNode(data,root);
     }
     

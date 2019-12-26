@@ -10,5 +10,5 @@ package geniopolictenico;
  * @author GaryBarzola
  */
 public class Akinator {
-    private 
+    
 }

@@ -60,14 +60,26 @@ public class Adivinador {
                 pila.offer(node);
             }
         }
-        Node<String> fin = pila.poll();
-        System.out.println(fin.getLeft().getData()+","+fin.getRight().getData());
-        return fin;
-    }
+        return pila.poll();
+    }   
 
-    public static void main(String[] arg){
-        Adivinador ad = new Adivinador();
-        
+    public BinaryTree getArbol() {
+        return arbol;
     }
     
+    public void guardarArbol(Node<String> n, String pregunta, String respuesta, String bool){
+        Node<String> p= new Node<>(pregunta);
+        Node<String> r= new Node<>(respuesta);
+        if(bool.equals("SI")){
+            p.setLeft(r);
+            p.setRight(n);
+        }else{
+           p.setRight(r);
+           p.setLeft(n);   
+        }
+        n=p;
+        n.setData(p.getData());
+        
+        
+    }
 }
