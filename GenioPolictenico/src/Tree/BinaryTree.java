@@ -1,4 +1,4 @@
-package Arbol;
+package tree;
 
 import java.io.IOException;
 

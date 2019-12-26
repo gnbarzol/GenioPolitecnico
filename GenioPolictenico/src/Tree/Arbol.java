@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Arbol;
+package tree;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -19,11 +19,11 @@ import java.util.List;
  *
  * @author user
  */
-public class Adivinador {
+public class Arbol {
     private BinaryTree arbol;
 
     
-    public Adivinador() {
+    public Arbol() {
         this.arbol = new BinaryTree(cargarArbol(leerArchivo()));
         
     }
