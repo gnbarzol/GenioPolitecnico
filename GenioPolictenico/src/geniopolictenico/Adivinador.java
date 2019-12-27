@@ -5,6 +5,7 @@
  */
 package geniopolictenico;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -12,6 +13,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import tree.*;
 
 /**
  *
@@ -19,6 +24,8 @@ import javafx.scene.layout.VBox;
  */
 public class Adivinador {
     private BorderPane root;
+    private final Font theFonttitle = Font.font("Helvetica", FontWeight.BOLD, 19 );
+    private final Font theFontSubtitle = Font.font("Helvetica", FontWeight.BOLD, 16 );
     
     public Adivinador(){
         root = new BorderPane();
@@ -29,7 +36,10 @@ public class Adivinador {
     private VBox title(){
         VBox contenedorTitulo = new VBox();
         Label titulo = new Label("Genio Politecnico");
-        
+        titulo.setTextFill(Color.web("#FFFFFF"));
+        titulo.setFont(theFonttitle);
+        titulo.setPadding(new Insets(10,0,10,0));
+        contenedorTitulo.setStyle("-fx-background-color: #333333;");
         contenedorTitulo.getChildren().add(titulo);
         contenedorTitulo.setAlignment(Pos.CENTER);
  
@@ -49,23 +59,43 @@ public class Adivinador {
         img.setFitHeight(650);
         img.setFitWidth(450);
         
-        centro.getChildren().addAll(img,mostrarJuego());
+        centro.getChildren().addAll(img,mostrarPreguntas("Primera pregunta"));
+        centro.setStyle("-fx-background-color:aliceblue");
         centro.setAlignment(Pos.CENTER);
-        centro.setSpacing(20);
+        centro.setSpacing(50);
         
         return centro;
     }
     
-    public VBox mostrarJuego(){
+    public VBox mostrarPreguntas(String pregunta){
         VBox contenidoPreguntas = new VBox();
-        Label p1 = new Label("Pregunta de prueba?");
+        Label p1 = new Label(pregunta.toUpperCase());
+        p1.setTextFill(Color.web("#333333"));
+        p1.setFont(theFontSubtitle);
         
-        
-        contenidoPreguntas.getChildren().add(p1);
+        contenidoPreguntas.getChildren().addAll(p1, mostrarOpciones());
         contenidoPreguntas.setAlignment(Pos.CENTER);
         contenidoPreguntas.setPrefSize(350, 650);
+        contenidoPreguntas.setSpacing(30);
         
         return contenidoPreguntas;
+    }
+    
+    public HBox mostrarOpciones(){
+        HBox opciones = new HBox();
+        Label lsi = new Label("Si");
+        lsi.setId("OpSi");
+        lsi.setFont(theFontSubtitle);
+        Label lno = new Label("No");
+        lno.setId("OpNo");
+        lno.setFont(theFontSubtitle);
+        
+        opciones.getChildren().addAll(lsi,lno);
+        opciones.setAlignment(Pos.CENTER);
+        opciones.setSpacing(50);
+        
+        
+        return opciones;
     }
     
 }
