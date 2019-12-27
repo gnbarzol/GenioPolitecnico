@@ -5,6 +5,8 @@
  */
 package geniopolictenico;
 
+import Tree.AnimalTree;
+import Tree.Node;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -23,16 +25,20 @@ import javafx.scene.text.FontWeight;
  */
 public class Adivinador {
     private BorderPane root;
-    private final Font theFonttitle = Font.font("Helvetica", FontWeight.BOLD, 19 );
-    private final Font theFontSubtitle = Font.font("Helvetica", FontWeight.BOLD, 16 );
+    private final Font theFontSubtitle = Font.font("Helvetica", FontWeight.BOLD, 18 );
+    private AnimalTree arbol;
+    private Node node;
     
     public Adivinador(){
+        arbol = new AnimalTree();
+        node = arbol.getArbol();
         root = new BorderPane();
         root.setTop(title());
         root.setCenter(esquemaCentral());
     }
     
     private VBox title(){
+        Font theFonttitle = Font.font("Helvetica", FontWeight.BOLD, 21 );
         VBox contenedorTitulo = new VBox();
         Label titulo = new Label("Genio Politecnico");
         titulo.setTextFill(Color.web("#FFFFFF"));
@@ -58,7 +64,8 @@ public class Adivinador {
         img.setFitHeight(650);
         img.setFitWidth(450);
         
-        centro.getChildren().addAll(img,mostrarPreguntas("Primera pregunta"));
+        
+        centro.getChildren().addAll(img,mostrarPreguntas((String)node.getData()));
         centro.setStyle("-fx-background-color:aliceblue");
         centro.setAlignment(Pos.CENTER);
         centro.setSpacing(50);
@@ -68,7 +75,7 @@ public class Adivinador {
     
     public VBox mostrarPreguntas(String pregunta){
         VBox contenidoPreguntas = new VBox();
-        Label p1 = new Label(pregunta.toUpperCase());
+        Label p1 = new Label(pregunta.toUpperCase());  //Debe estar como atributo en la clase
         p1.setTextFill(Color.web("#333333"));
         p1.setFont(theFontSubtitle);
         
@@ -88,6 +95,17 @@ public class Adivinador {
         Label lno = new Label("No");
         lno.setId("OpNo");
         lno.setFont(theFontSubtitle);
+        
+        lsi.setOnMouseClicked((e)->{
+            node = node.getLeft();
+            System.out.println(node.getData());
+        });
+        
+        lno.setOnMouseClicked((e)->{
+            node = node.getRight();
+            System.out.println(node.getData());
+
+        });
         
         opciones.getChildren().addAll(lsi,lno);
         opciones.setAlignment(Pos.CENTER);

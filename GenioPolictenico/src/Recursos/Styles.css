@@ -18,6 +18,7 @@ and open the template in the editor.
 #OpSi:hover{
     -fx-cursor: hand;
     -fx-text-fill: #12EB00;
+    -fx-font-family: "Arial";
 }
 
 #OpNo{

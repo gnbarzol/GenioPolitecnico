@@ -19,13 +19,12 @@ import java.util.List;
  *
  * @author user
  */
-public class Arbol {
-    private BinaryTree arbol;
+public class AnimalTree {
+    private Node root;
 
     
-    public Arbol() {
-        this.arbol = new BinaryTree(cargarArbol(leerArchivo()));
-        
+    public AnimalTree() {
+        this.root =cargarArbol(leerArchivo());
     }
     
     public final List<String> leerArchivo(){
@@ -64,8 +63,8 @@ public class Arbol {
         return pila.poll();
     }   
 
-    public BinaryTree getArbol() {
-        return arbol;
+    public Node getArbol() {
+        return root;
     }
     
     /**
@@ -90,7 +89,7 @@ public class Arbol {
     }
     
     
-    public void guardarArbol(BinaryTree arbol){
+    public void guardarArbol(Node arbol){
         //Metodo que leerla el arbol pasado por parametro en pos-orden
         // y lo añadira al archivo de datos-1.txt.
     }
