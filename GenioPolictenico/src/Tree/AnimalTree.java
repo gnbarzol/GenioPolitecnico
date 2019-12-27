@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  *
@@ -50,17 +51,20 @@ public class AnimalTree {
             String tipo = elemento.substring(0, 2);
             String data = elemento.substring(2).trim();
             Node<String> node = new Node<>(data);
-            if(tipo.equals("#R"))
-                pila.offer(node);
+            
+            if(tipo.equals("#R")){
+                pila.push(node);
+            }
             else{   
-                Node<String> right = pila.poll();
-                Node<String> left = pila.poll();
+                Node<String> right = pila.pop();
+                Node<String> left = pila.pop();
                 node.setLeft(left);
                 node.setRight(right);
-                pila.offer(node);
+                pila.push(node);
             }
         }
-        return pila.poll();
+        Node<String> resul = pila.pop();
+        return resul;
     }   
 
     public Node getArbol() {
@@ -94,5 +98,49 @@ public class AnimalTree {
         // y lo añadira al archivo de datos-1.txt.
     }
     
+    public int BFS(Node p_tree) {
+        if (p_tree == null) {
+            return 1;
+        }
+        Queue<Node> queue_level = new LinkedList<>();
+        queue_level.clear();
+        queue_level.add(p_tree);
+        while (!(queue_level.isEmpty())) {
+            Node temp = queue_level.remove();
+            System.out.println(temp.getData() + " ");
+            if (temp.getLeft() != null) {
+                queue_level.add(temp.getLeft());
+            }
+            if (temp.getRight()!= null) {
+                queue_level.add(temp.getRight());
+            }
+        }
+        return 0;
+    }
+    
+    public void recorridoPosorden()
+    {
+    ayudantePosorden(root);
+    }
+
+    //metodo recursivo para recorrido posorden
+
+    private void ayudantePosorden(Node nodo)
+    {
+    if (nodo == null)
+    return;
+
+    ayudantePosorden(nodo.getLeft());
+    ayudantePosorden(nodo.getRight());
+    System.out.println(nodo.getData() + " ");
+    }
+
+
+
+    
+    public static void main (String[] args){
+        AnimalTree ad = new AnimalTree();
+        ad.recorridoPosorden();
+    }
     
 }
