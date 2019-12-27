@@ -16,7 +16,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+<<<<<<< HEAD
 import tree.*;
+=======
+>>>>>>> master
 
 /**
  *
