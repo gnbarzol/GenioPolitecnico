@@ -6,6 +6,7 @@
 package geniopolictenico;
 
 import javafx.application.Application;
+import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -25,6 +26,7 @@ public class GenioPolictenico extends Application {
     public void start(Stage primaryStage) {
         adivinador = new Adivinador();
         sc = new Scene(adivinador.getRoot());
+        sc.getStylesheets().add("Recursos/Styles.css");
         primaryStage.setScene(sc);
         primaryStage.show();
     }

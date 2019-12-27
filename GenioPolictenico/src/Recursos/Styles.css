@@ -11,3 +11,20 @@ and open the template in the editor.
 .title{
     -fx-font-size: 20px;
 }
+
+#OpSi{
+    -fx-text-fill: #333333;
+}
+#OpSi:hover{
+    -fx-cursor: hand;
+    -fx-text-fill: #12EB00;
+}
+
+#OpNo{
+    -fx-text-fill: #333333;
+}
+
+#OpNo:hover{
+    -fx-cursor: hand;
+    -fx-text-fill: #FF0000;
+}
