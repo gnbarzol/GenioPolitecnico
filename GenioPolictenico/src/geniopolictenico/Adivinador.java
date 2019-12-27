@@ -7,6 +7,7 @@ package geniopolictenico;
 
 import Tree.AnimalTree;
 import Tree.Node;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -28,13 +29,21 @@ public class Adivinador {
     private final Font theFontSubtitle = Font.font("Helvetica", FontWeight.BOLD, 18 );
     private AnimalTree arbol;
     private Node node;
+    private Label lPregunta;
     
     public Adivinador(){
         arbol = new AnimalTree();
         node = arbol.getArbol();
         root = new BorderPane();
         root.setTop(title());
-        root.setCenter(esquemaCentral());
+        
+        lPregunta = new Label();
+        //lPregunta.setTextFill(Color.web("#333333"));
+        //lPregunta.setFont(theFontSubtitle);
+        //root.setCenter(lPregunta);
+        //lPregunta.setOnMouseClicked((e)->{
+            root.setCenter(esquemaCentral());
+        //});
     }
     
     private VBox title(){
@@ -65,7 +74,7 @@ public class Adivinador {
         img.setFitWidth(450);
         
         
-        centro.getChildren().addAll(img,mostrarPreguntas((String)node.getData()));
+        centro.getChildren().addAll(img,mostrarPreguntas("Empezar Juego"/*(String)node.getData()*/));
         centro.setStyle("-fx-background-color:aliceblue");
         centro.setAlignment(Pos.CENTER);
         centro.setSpacing(50);
@@ -75,11 +84,11 @@ public class Adivinador {
     
     public VBox mostrarPreguntas(String pregunta){
         VBox contenidoPreguntas = new VBox();
-        Label p1 = new Label(pregunta.toUpperCase());  //Debe estar como atributo en la clase
-        p1.setTextFill(Color.web("#333333"));
-        p1.setFont(theFontSubtitle);
+        lPregunta.setText(pregunta.toUpperCase());  //Debe estar como atributo en la clase
+        lPregunta.setTextFill(Color.web("#333333"));
+        lPregunta.setFont(theFontSubtitle);
         
-        contenidoPreguntas.getChildren().addAll(p1, mostrarOpciones());
+        contenidoPreguntas.getChildren().addAll(lPregunta, mostrarOpciones());
         contenidoPreguntas.setAlignment(Pos.CENTER);
         contenidoPreguntas.setPrefSize(350, 650);
         contenidoPreguntas.setSpacing(30);
@@ -97,14 +106,20 @@ public class Adivinador {
         lno.setFont(theFontSubtitle);
         
         lsi.setOnMouseClicked((e)->{
-            node = node.getLeft();
-            System.out.println(node.getData());
+            if(!lPregunta.getText().toLowerCase().equals("empezar juego"))
+                node = node.getLeft();
+            actualizarPregunta(node);
+            
+            //Si el nodo que viene es null debo preguntarle por el animal y como identificarlo
         });
         
         lno.setOnMouseClicked((e)->{
+            if(lPregunta.getText().toLowerCase().equals("empezar juego"))
+                Platform.exit();
             node = node.getRight();
-            System.out.println(node.getData());
-
+            actualizarPregunta(node);
+            
+            //Si el nodo que viene es null debo preguntarle por el animal y como identificarlo
         });
         
         opciones.getChildren().addAll(lsi,lno);
@@ -113,6 +128,10 @@ public class Adivinador {
         
         
         return opciones;
+    }
+    
+    public void actualizarPregunta(Node node){
+        lPregunta.setText(((String)node.getData()).toUpperCase()); 
     }
     
 }
