@@ -5,7 +5,7 @@
 #P es un animal domestico?
 #R un pinguino
 #R un calamar
-#R una araña
+#R una arania
 #P vive en el oceano?
 #P es un ave?
 #P es un mamifero?

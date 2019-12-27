@@ -28,3 +28,14 @@ and open the template in the editor.
     -fx-cursor: hand;
     -fx-text-fill: #FF0000;
 }
+
+.adivinoR{
+    -fx-text-fill: #7e0cf5;
+}
+.adivinoP{
+    -fx-text-fill: #333333;
+}
+
+.adivinoF{
+    -fx-text-fill: #ee4540;
+}

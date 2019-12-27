@@ -7,11 +7,14 @@ package geniopolictenico;
 
 import Tree.AnimalTree;
 import Tree.Node;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -26,21 +29,28 @@ import javafx.scene.text.FontWeight;
  * @author GaryBarzola
  */
 public class Adivinador {
-    private BorderPane root;
+    private final BorderPane root;
     private final Font theFontSubtitle = Font.font("Helvetica", FontWeight.BOLD, 18 );
-    private AnimalTree arbol;
+    private final AnimalTree arbol;
     private Node node;
     private Label lPregunta;
+    private VBox contenidoPreguntas;
     
     public Adivinador(){
+        contenidoPreguntas = new VBox();
         lPregunta = new Label();
         arbol = new AnimalTree();
         node = arbol.getArbol();
         root = new BorderPane();
         root.setTop(title());
         root.setCenter(esquemaCentral());
+        
     }
     
+    /**
+     * 
+     * @return Crea el titulo de la app
+     */
     private VBox title(){
         Font theFonttitle = Font.font("Helvetica", FontWeight.BOLD, 21 );
         VBox contenedorTitulo = new VBox();
@@ -59,7 +69,11 @@ public class Adivinador {
         return root;
     }
     
-    
+    /**
+     * 
+     * @return Es el contenedor principal donde se visualizan las preguntas y las respuestas
+     * que el adivino puede mostrar al usuario.
+     */
     private HBox esquemaCentral(){
         HBox centro = new HBox();
         
@@ -77,9 +91,13 @@ public class Adivinador {
         return centro;
     }
     
+    /**
+     * 
+     * @param pregunta Recibe la pregunta inicial para comenzar el juego
+     * @return Contenedor con la pregunta pasada por parametro
+     */
     public VBox mostrarPreguntas(String pregunta){
-        VBox contenidoPreguntas = new VBox();
-        lPregunta.setText(pregunta.toUpperCase());  //Debe estar como atributo en la clase
+        lPregunta.setText(pregunta.toUpperCase());
         lPregunta.setTextFill(Color.web("#333333"));
         lPregunta.setFont(theFontSubtitle);
         
@@ -91,6 +109,13 @@ public class Adivinador {
         return contenidoPreguntas;
     }
     
+    /**
+     * 
+     * @return Contenedor con las respuestas que el usuario puede elegir(Si, No)
+     * al presionar si, se avanza a la pregunta de la izq.
+     * al presionar no, se avanza a la pregunta de la der.
+     * Al llegar a una respuesta(hoja) el genio pregunta si se acerto o no.
+     */
     public HBox mostrarOpciones(){
         HBox opciones = new HBox();
         Label lsi = new Label("Si");
@@ -105,46 +130,74 @@ public class Adivinador {
         opciones.setSpacing(50);
         
         lsi.setOnMouseClicked((e)->{
-            if(!lPregunta.getText().toLowerCase().equals("empezar juego"))
-                node = node.getLeft();
-            if(node.getLeft()!=null)
+            if(!lPregunta.getText().toLowerCase().equals("empezar juego")){
+                if(node.getLeft()!=null){
+                    node = node.getLeft();
+                    actualizarPregunta(node);
+                }else{
+                    lPregunta.getStyleClass().add("adivinoR");
+                    adivinoAcerto();
+                    opciones.getChildren().removeAll(lsi,lno);
+                    opciones.getChildren().add(volverAJugar());
+                }
+                    
+            }else{
                 actualizarPregunta(node);
-            else{
-                adivinoAcerto(node);
-                opciones.getChildren().removeAll(lsi,lno);
-                opciones.getChildren().add(volverAJugar());
             }
         });
         
         lno.setOnMouseClicked((e)->{
             if(lPregunta.getText().toLowerCase().equals("empezar juego"))
                 Platform.exit();
-            
-            if(node.getRight()!=null){
-                node = node.getRight();
-                actualizarPregunta(node);
-            }else{
-                adivinoNoAcerto();
-                opciones.getChildren().removeAll(lsi,lno);
-                opciones.getChildren().addAll(volverAJugar(), ayudarAMejorar());
+            else{
+                if(node.getRight()!=null){
+                    node = node.getRight();
+                    actualizarPregunta(node);
+                }else{
+                    lPregunta.getStyleClass().add("adivinoF");
+                    adivinoSMS("AYUDAME A MEJORAR");
+                    opciones.getChildren().removeAll(lsi,lno);
+                    opciones.getChildren().addAll(volverAJugar(), ayudarAMejorar());
+                }
             }
+            
         });
         
         return opciones;
     }
     
+    /**
+     * 
+     * @param node Nodo con la data para cambiar el texto al Label lPregunta, el cual
+     * muestra las preguntas al usuario.
+     */
     public void actualizarPregunta(Node node){
-        lPregunta.setText(((String)node.getData()).toUpperCase()); 
+        String data = (String)node.getData();
+        if(!data.substring(data.trim().length()-1).equals("?")){
+            data = "ES "+data+"?";
+        }
+        lPregunta.setText(data.toUpperCase()); 
     }
     
-    public void adivinoAcerto(Node node){
-        lPregunta.setText("EL ANIMAL ES "+ ((String)node.getData()).toUpperCase());
+    /**
+     * Manda un mensaje al usuario de que el genio acerto.
+     */
+    public void adivinoAcerto(){
+        lPregunta.setText("EL GENIO LO HIZO DE NUEVO!");
     }
     
-    public void adivinoNoAcerto(){
-        lPregunta.setText("AYUDAME A MEJORAR");
+    /**
+     * 
+     * @param sms Recibe un sms del mensaje que quiero mostrar al usuario
+     */
+    public void adivinoSMS(String sms){
+        lPregunta.setText(sms);
     }
     
+    /**
+     * 
+     * @return Label jugarAgain, para que el usuario pueda volver a jugar
+     */
     public Label volverAJugar(){
         Label jugarAgain = new Label("Volver a Jugar");
         jugarAgain.setTextFill(Color.web("#333333"));
@@ -154,11 +207,16 @@ public class Adivinador {
         jugarAgain.setOnMouseClicked((e)->{
             node = arbol.getArbol();
             root.setCenter(esquemaCentral());
+            lPregunta.getStyleClass().clear();
         });
 
         return jugarAgain;
     }
     
+    /**
+     * 
+     * @return Label para mejorar el juego, llamado al momento de no acertar un pensamiento.
+     */
     public Label ayudarAMejorar(){
         Label ayudar = new Label("Ayudar");
         ayudar.setTextFill(Color.web("#333333"));
@@ -166,10 +224,99 @@ public class Adivinador {
         ayudar.getStyleClass().add("OpSi");
         
         ayudar.setOnMouseClicked((e)->{
+            lPregunta.getStyleClass().clear();
+            
+            contenidoPreguntas.getChildren().clear();
+            contenidoPreguntas.getChildren().add(obtenerDatos());
             //codigo que pida pregunta y respuesta y añada al arbol
         });
         
         return ayudar;
+    }
+    
+    /**
+     * 
+     * @return Contenedor para que el usuario ingrese la pregunta y la respuesta
+     */
+    public VBox obtenerDatos(){
+        VBox contenedorMejoras= new VBox();
+        VBox respuesta = new VBox();
+        Button btn_sgt = new Button("Continuar");
+        
+        String tRespuesta = preguntarAnimal(respuesta);
+        String data = (String)node.getData();
+
+        contenedorMejoras.getChildren().addAll(respuesta, btn_sgt);
+        contenedorMejoras.setAlignment(Pos.CENTER);
+        contenedorMejoras.setSpacing(20);
+        
+                
+        btn_sgt.setOnMouseClicked((e)->{
+            respuesta.getChildren().clear();
+            contenedorMejoras.getChildren().clear();
+            
+            VBox pregunta = new VBox();
+            Button btn_sgte = new Button("Continuar");
+            
+            String tPregunta = preguntarPregunta(pregunta, tRespuesta, data);
+            
+            contenedorMejoras.getChildren().addAll(pregunta, btn_sgte);
+            
+            btn_sgte.setOnMouseClicked((ex)->{
+                pregunta.getChildren().clear();
+                contenedorMejoras.getChildren().clear();
+                
+                VBox vBlugar = new VBox();
+                HBox opciones = new HBox();
+                Label si = new Label("SI"); si.getStyleClass().add("OpSi");
+                Label no = new Label("NO"); no.getStyleClass().add("OpNo");
+                
+                opciones.getChildren().addAll(si, no);
+                opciones.setAlignment(Pos.CENTER);
+                opciones.setSpacing(40);
+                
+                String respuestaLugar = asignarLugarNodo(vBlugar, tRespuesta, tPregunta);
+                
+                contenedorMejoras.getChildren().addAll(vBlugar, opciones);
+            });
+        });
+        
+        
+        
+        return contenedorMejoras;
+    }
+    
+    public String preguntarAnimal(VBox contenedor){
+        Label rUser = new Label("Que animal estabas pensando? ");
+        TextField tRespuesta = new TextField();
+
+        contenedor.getChildren().addAll(rUser, tRespuesta);
+        contenedor.setAlignment(Pos.CENTER);
+        contenedor.setSpacing(15);
+        
+        String data = tRespuesta.getText().trim();
+        System.out.println(data);
+        return data;
+    }
+    
+    public String preguntarPregunta(VBox contenedor, String dataRespuestaUser, String dataNodo){
+        Label pUser = new Label("Escribe una pregunta que me permita diferenciar entre\n "+dataRespuestaUser+ " y "+dataNodo+": ");
+        TextField tPregunta = new TextField();
+        
+        contenedor.getChildren().addAll(pUser, tPregunta);
+        contenedor.setAlignment(Pos.CENTER);
+        contenedor.setSpacing(15);
+        
+        return tPregunta.getText().trim();
+    }
+    
+    public String asignarLugarNodo(VBox contenedor, String dataRespuestaUser, String pregunta){
+        
+        //contenedor.getChildren().addAll();
+        contenedor.setAlignment(Pos.CENTER);
+        contenedor.setSpacing(15);
+        
+        return "";
     }
     
 }
