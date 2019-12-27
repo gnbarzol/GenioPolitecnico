@@ -10,6 +10,7 @@ import Tree.Node;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -32,18 +33,12 @@ public class Adivinador {
     private Label lPregunta;
     
     public Adivinador(){
+        lPregunta = new Label();
         arbol = new AnimalTree();
         node = arbol.getArbol();
         root = new BorderPane();
         root.setTop(title());
-        
-        lPregunta = new Label();
-        //lPregunta.setTextFill(Color.web("#333333"));
-        //lPregunta.setFont(theFontSubtitle);
-        //root.setCenter(lPregunta);
-        //lPregunta.setOnMouseClicked((e)->{
-            root.setCenter(esquemaCentral());
-        //});
+        root.setCenter(esquemaCentral());
     }
     
     private VBox title(){
@@ -99,39 +94,82 @@ public class Adivinador {
     public HBox mostrarOpciones(){
         HBox opciones = new HBox();
         Label lsi = new Label("Si");
-        lsi.setId("OpSi");
+        lsi.getStyleClass().add("OpSi");
         lsi.setFont(theFontSubtitle);
         Label lno = new Label("No");
-        lno.setId("OpNo");
+        lno.getStyleClass().add("OpNo");
         lno.setFont(theFontSubtitle);
-        
-        lsi.setOnMouseClicked((e)->{
-            if(!lPregunta.getText().toLowerCase().equals("empezar juego"))
-                node = node.getLeft();
-            actualizarPregunta(node);
-            
-            //Si el nodo que viene es null debo preguntarle por el animal y como identificarlo
-        });
-        
-        lno.setOnMouseClicked((e)->{
-            if(lPregunta.getText().toLowerCase().equals("empezar juego"))
-                Platform.exit();
-            node = node.getRight();
-            actualizarPregunta(node);
-            
-            //Si el nodo que viene es null debo preguntarle por el animal y como identificarlo
-        });
         
         opciones.getChildren().addAll(lsi,lno);
         opciones.setAlignment(Pos.CENTER);
         opciones.setSpacing(50);
         
+        lsi.setOnMouseClicked((e)->{
+            if(!lPregunta.getText().toLowerCase().equals("empezar juego"))
+                node = node.getLeft();
+            if(node.getLeft()!=null)
+                actualizarPregunta(node);
+            else{
+                adivinoAcerto(node);
+                opciones.getChildren().removeAll(lsi,lno);
+                opciones.getChildren().add(volverAJugar());
+            }
+        });
+        
+        lno.setOnMouseClicked((e)->{
+            if(lPregunta.getText().toLowerCase().equals("empezar juego"))
+                Platform.exit();
+            
+            if(node.getRight()!=null){
+                node = node.getRight();
+                actualizarPregunta(node);
+            }else{
+                adivinoNoAcerto();
+                opciones.getChildren().removeAll(lsi,lno);
+                opciones.getChildren().addAll(volverAJugar(), ayudarAMejorar());
+            }
+        });
         
         return opciones;
     }
     
     public void actualizarPregunta(Node node){
         lPregunta.setText(((String)node.getData()).toUpperCase()); 
+    }
+    
+    public void adivinoAcerto(Node node){
+        lPregunta.setText("EL ANIMAL ES "+ ((String)node.getData()).toUpperCase());
+    }
+    
+    public void adivinoNoAcerto(){
+        lPregunta.setText("AYUDAME A MEJORAR");
+    }
+    
+    public Label volverAJugar(){
+        Label jugarAgain = new Label("Volver a Jugar");
+        jugarAgain.setTextFill(Color.web("#333333"));
+        jugarAgain.setFont(theFontSubtitle);
+        jugarAgain.getStyleClass().add("OpSi");
+        
+        jugarAgain.setOnMouseClicked((e)->{
+            node = arbol.getArbol();
+            root.setCenter(esquemaCentral());
+        });
+
+        return jugarAgain;
+    }
+    
+    public Label ayudarAMejorar(){
+        Label ayudar = new Label("Ayudar");
+        ayudar.setTextFill(Color.web("#333333"));
+        ayudar.setFont(theFontSubtitle);
+        ayudar.getStyleClass().add("OpSi");
+        
+        ayudar.setOnMouseClicked((e)->{
+            //codigo que pida pregunta y respuesta y añada al arbol
+        });
+        
+        return ayudar;
     }
     
 }

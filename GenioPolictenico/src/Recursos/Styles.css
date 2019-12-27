@@ -12,20 +12,19 @@ and open the template in the editor.
     -fx-font-size: 20px;
 }
 
-#OpSi{
+.OpSi{
     -fx-text-fill: #333333;
 }
-#OpSi:hover{
+.OpSi:hover{
     -fx-cursor: hand;
     -fx-text-fill: #12EB00;
-    -fx-font-family: "Arial";
 }
 
-#OpNo{
+.OpNo{
     -fx-text-fill: #333333;
 }
 
-#OpNo:hover{
+.OpNo:hover{
     -fx-cursor: hand;
     -fx-text-fill: #FF0000;
 }
