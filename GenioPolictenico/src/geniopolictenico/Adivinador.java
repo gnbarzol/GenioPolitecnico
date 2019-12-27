@@ -225,7 +225,6 @@ public class Adivinador {
         
         ayudar.setOnMouseClicked((e)->{
             lPregunta.getStyleClass().clear();
-            
             contenidoPreguntas.getChildren().clear();
             contenidoPreguntas.getChildren().add(obtenerDatos());
             //codigo que pida pregunta y respuesta y añada al arbol
@@ -252,32 +251,25 @@ public class Adivinador {
         
                 
         btn_sgt.setOnMouseClicked((e)->{
-            respuesta.getChildren().clear();
-            contenedorMejoras.getChildren().clear();
-            
             VBox pregunta = new VBox();
             Button btn_sgte = new Button("Continuar");
             
             String tPregunta = preguntarPregunta(pregunta, tRespuesta, data);
             
+            respuesta.getChildren().clear();
+            contenedorMejoras.getChildren().clear();
             contenedorMejoras.getChildren().addAll(pregunta, btn_sgte);
             
             btn_sgte.setOnMouseClicked((ex)->{
-                pregunta.getChildren().clear();
-                contenedorMejoras.getChildren().clear();
-                
                 VBox vBlugar = new VBox();
-                HBox opciones = new HBox();
-                Label si = new Label("SI"); si.getStyleClass().add("OpSi");
-                Label no = new Label("NO"); no.getStyleClass().add("OpNo");
-                
-                opciones.getChildren().addAll(si, no);
-                opciones.setAlignment(Pos.CENTER);
-                opciones.setSpacing(40);
-                
+
                 String respuestaLugar = asignarLugarNodo(vBlugar, tRespuesta, tPregunta);
                 
-                contenedorMejoras.getChildren().addAll(vBlugar, opciones);
+                //llamar al metodo que me enlaza el subarbol y me lo guarda
+                
+                pregunta.getChildren().clear();
+                contenedorMejoras.getChildren().clear();
+                contenedorMejoras.getChildren().addAll(vBlugar);
             });
         });
         
@@ -311,12 +303,40 @@ public class Adivinador {
     }
     
     public String asignarLugarNodo(VBox contenedor, String dataRespuestaUser, String pregunta){
+        String respt= "";
+        Label lLugar = new Label("Para "+dataRespuestaUser+", la respuesta a la pregunta: “"+pregunta+"”, es si o no?");
         
-        //contenedor.getChildren().addAll();
+        HBox opciones = new HBox();
+        Label si = new Label("SI"); si.getStyleClass().add("OpSi"); si.setTextFill(Color.web("#333333")); si.setFont(theFontSubtitle);
+        Label no = new Label("NO"); no.getStyleClass().add("OpNo"); no.setTextFill(Color.web("#333333")); no.setFont(theFontSubtitle);
+        
+        si.setOnMouseClicked((e)->{
+            String r = "SI";
+            //obtenerResultado(respt,r);
+           
+            
+        });
+        
+        no.setOnMouseClicked((e)->{
+            //respt = "NO";
+            
+        });
+        
+        
+        opciones.getChildren().addAll(si, no);
+        opciones.setAlignment(Pos.CENTER);
+        opciones.setSpacing(40);
+        
+        contenedor.getChildren().addAll(lLugar,opciones);
         contenedor.setAlignment(Pos.CENTER);
         contenedor.setSpacing(15);
         
-        return "";
+        return respt;
+    }
+    
+    public boolean obtenerResultado(String parametro, String d){
+        parametro = d;
+        return true;
     }
     
 }
