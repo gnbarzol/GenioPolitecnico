@@ -7,6 +7,10 @@ package geniopolictenico;
 
 import Tree.AnimalTree;
 import Tree.Node;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -359,5 +363,6 @@ public class Adivinador {
         
         return vAgradecimiento;
     }
+    
     
 }
