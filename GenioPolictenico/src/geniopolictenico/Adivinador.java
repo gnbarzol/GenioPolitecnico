@@ -36,7 +36,6 @@ public class Adivinador {
     private Label lPregunta;
     private VBox contenidoPreguntas;
     private VBox contenedorMejoras;
-    private Boolean respt= false;
     
     public Adivinador(){
         contenedorMejoras= new VBox();
@@ -92,7 +91,7 @@ public class Adivinador {
         centro.getChildren().addAll(img,vB);
         centro.setStyle("-fx-background-color:aliceblue");
         centro.setAlignment(Pos.CENTER);
-        centro.setSpacing(50);
+        centro.setSpacing(40);
         
         return centro;
     }
@@ -237,7 +236,6 @@ public class Adivinador {
             lPregunta.getStyleClass().clear();
             contenidoPreguntas.getChildren().clear();
             contenidoPreguntas.getChildren().add(obtenerDatos());
-            //codigo que pida pregunta y respuesta y añada al arbol
         });
         
         return ayudar;
@@ -251,6 +249,7 @@ public class Adivinador {
         
         VBox respuesta = new VBox();
         Button btn_sgt = new Button("Continuar");
+        btn_sgt.getStyleClass().add("myButton");
         
         TextField tRespuesta = preguntarAnimal(respuesta);
         String data = (String)node.getData();
@@ -263,6 +262,7 @@ public class Adivinador {
         btn_sgt.setOnMouseClicked((e)->{
             VBox pregunta = new VBox();
             Button btn_sgte = new Button("Continuar");
+            btn_sgte.getStyleClass().add("myButton");
             
             String dataRespuesta = tRespuesta.getText().trim();
             TextField tPregunta = preguntarPregunta(pregunta, dataRespuesta, data);
@@ -276,14 +276,7 @@ public class Adivinador {
 
                 String dataPregunta = tPregunta.getText().trim();
                 
-                Boolean respuestaLugar = asignarLugarNodo(vBlugar, dataRespuesta, dataPregunta);
-                
-                System.out.println("Node antes de actualizar: "+node.getData());
-                
-                arbol.actualizarNodos(node, dataPregunta, dataRespuesta, respuestaLugar);
-                //llamar al metodo que me guarda el arbol
-                
-                System.out.println("Node izq de actualizar: "+node.getLeft().getData());
+                asignarLugarNodo(vBlugar, dataRespuesta, dataPregunta);
                 
                 pregunta.getChildren().clear();
                 contenedorMejoras.getChildren().clear();
@@ -296,6 +289,9 @@ public class Adivinador {
     
     public TextField preguntarAnimal(VBox contenedor){
         Label rUser = new Label("Que animal estabas pensando? ");
+        rUser.setTextFill(Color.web("#333333")); 
+        rUser.setFont(theFontSubtitle);
+        
         TextField tRespuesta = new TextField();
 
         contenedor.getChildren().addAll(rUser, tRespuesta);
@@ -306,7 +302,10 @@ public class Adivinador {
     }
     
     public TextField preguntarPregunta(VBox contenedor, String dataRespuestaUser, String dataNodo){
-        Label pUser = new Label("Escribe una pregunta que me permita diferenciar entre\n "+dataRespuestaUser+ " y "+dataNodo+": ");
+        Label pUser = new Label("Escribe una pregunta que me permita\n diferenciar entre "+dataRespuestaUser+ " y "+dataNodo+" ");
+        pUser.setTextFill(Color.web("#333333")); 
+        pUser.setFont(theFontSubtitle);
+        
         TextField tPregunta = new TextField();
         
         contenedor.getChildren().addAll(pUser, tPregunta);
@@ -316,8 +315,10 @@ public class Adivinador {
         return tPregunta;
     }
     
-    public Boolean asignarLugarNodo(VBox contenedor, String dataRespuestaUser, String pregunta){
-        Label lLugar = new Label("Para "+dataRespuestaUser+", la respuesta a la pregunta: “"+pregunta+"”, es si o no?");
+    public void asignarLugarNodo(VBox contenedor, String dataRespuestaUser, String pregunta){
+        Label lLugar = new Label("Para "+dataRespuestaUser+", la respuesta a la \npregunta: “"+pregunta+"”, es...");
+        lLugar.setTextFill(Color.web("#333333")); 
+        lLugar.setFont(theFontSubtitle);
         
         HBox opciones = new HBox();
         Label si = new Label("SI"); si.getStyleClass().add("OpSi"); si.setTextFill(Color.web("#333333")); si.setFont(theFontSubtitle);
@@ -330,35 +331,33 @@ public class Adivinador {
         
         contenedor.getChildren().addAll(lLugar,opciones);
         contenedor.setAlignment(Pos.CENTER);
-        contenedor.setSpacing(15);
+        contenedor.setSpacing(20);
         
         si.setOnMouseClicked((e)->{
-            respt = true;
+            arbol.actualizarNodos(node, pregunta, dataRespuestaUser, true);
             contenedor.getChildren().clear();
-            //contenedorMejoras.getChildren().clear();
             contenedor.getChildren().add(mostrarAgradecimiento());
         });
         
         no.setOnMouseClicked((e)->{
-            respt = false; 
+            arbol.actualizarNodos(node, pregunta, dataRespuestaUser, false);
             contenedor.getChildren().clear();
-            //contenedorMejoras.getChildren().clear();
             contenedor.getChildren().add(mostrarAgradecimiento());
         });
-         
-        return respt;
     }
     
     public VBox mostrarAgradecimiento(){
-        VBox vB = new VBox();
-        Label l = new Label("Gracias por ayudarme a mejorar");
+        VBox vAgradecimiento = new VBox();
+        Label lSMS = new Label("Gracias por ayudarme a mejorar");
+        lSMS.setTextFill(Color.web("#333333")); 
+        lSMS.setFont(theFontSubtitle);
         
-        vB.getChildren().addAll(l,volverAJugar());
-        vB.setAlignment(Pos.CENTER);
-        vB.setSpacing(20);
+        vAgradecimiento.getChildren().addAll(lSMS, volverAJugar());
+        vAgradecimiento.setAlignment(Pos.CENTER);
+        vAgradecimiento.setSpacing(20);
         
         
-        return vB;
+        return vAgradecimiento;
     }
     
 }

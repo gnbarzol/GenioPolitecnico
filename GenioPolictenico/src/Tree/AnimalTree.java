@@ -83,9 +83,7 @@ public class AnimalTree {
         Node<String> r= new Node<>(respuesta);
         node.setData(pregunta);
         if(bool){
-            System.out.println("Entro al if del SI");
             node.setLeft(r);
-            //System.out.println("node del metodo"+node.getLeft().getData());
             node.setRight(antiguoNode);
         }else{
             node.setRight(r);
