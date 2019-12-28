@@ -78,12 +78,14 @@ public class AnimalTree {
      * @param respuesta, es la respuesta(Hoja) de la nueva raiz formada de la pregunta
      * @param bool, es la respuesta del usuario ante un pregunta( SI , NO)
      */
-    public void actualizarNodos(Node<String> node, String pregunta, String respuesta, String bool){
+    public void actualizarNodos(Node<String> node, String pregunta, String respuesta, Boolean bool){
         Node<String> antiguoNode= new Node<>(node.getData());
         Node<String> r= new Node<>(respuesta);
         node.setData(pregunta);
-        if(bool.equals("SI")){
+        if(bool){
+            System.out.println("Entro al if del SI");
             node.setLeft(r);
+            //System.out.println("node del metodo"+node.getLeft().getData());
             node.setRight(antiguoNode);
         }else{
             node.setRight(r);

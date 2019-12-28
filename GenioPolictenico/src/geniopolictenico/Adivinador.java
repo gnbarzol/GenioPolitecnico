@@ -35,8 +35,11 @@ public class Adivinador {
     private Node node;
     private Label lPregunta;
     private VBox contenidoPreguntas;
+    private VBox contenedorMejoras;
+    private Boolean respt= false;
     
     public Adivinador(){
+        contenedorMejoras= new VBox();
         contenidoPreguntas = new VBox();
         lPregunta = new Label();
         arbol = new AnimalTree();
@@ -82,8 +85,11 @@ public class Adivinador {
         img.setFitHeight(650);
         img.setFitWidth(450);
         
-        
-        centro.getChildren().addAll(img,mostrarPreguntas("Empezar Juego"/*(String)node.getData()*/));
+        VBox vB = mostrarPreguntas("Empezar Juego");
+        if(centro.getChildren().contains(img)){
+            centro.getChildren().clear();
+        }
+        centro.getChildren().addAll(img,vB);
         centro.setStyle("-fx-background-color:aliceblue");
         centro.setAlignment(Pos.CENTER);
         centro.setSpacing(50);
@@ -101,6 +107,9 @@ public class Adivinador {
         lPregunta.setTextFill(Color.web("#333333"));
         lPregunta.setFont(theFontSubtitle);
         
+        if(contenidoPreguntas.getChildren().contains(lPregunta)){
+            contenidoPreguntas.getChildren().clear();
+        }
         contenidoPreguntas.getChildren().addAll(lPregunta, mostrarOpciones());
         contenidoPreguntas.setAlignment(Pos.CENTER);
         contenidoPreguntas.setPrefSize(350, 650);
@@ -208,6 +217,7 @@ public class Adivinador {
             node = arbol.getArbol();
             root.setCenter(esquemaCentral());
             lPregunta.getStyleClass().clear();
+            contenedorMejoras.getChildren().clear();
         });
 
         return jugarAgain;
@@ -238,11 +248,11 @@ public class Adivinador {
      * @return Contenedor para que el usuario ingrese la pregunta y la respuesta
      */
     public VBox obtenerDatos(){
-        VBox contenedorMejoras= new VBox();
+        
         VBox respuesta = new VBox();
         Button btn_sgt = new Button("Continuar");
         
-        String tRespuesta = preguntarAnimal(respuesta);
+        TextField tRespuesta = preguntarAnimal(respuesta);
         String data = (String)node.getData();
 
         contenedorMejoras.getChildren().addAll(respuesta, btn_sgt);
@@ -254,7 +264,8 @@ public class Adivinador {
             VBox pregunta = new VBox();
             Button btn_sgte = new Button("Continuar");
             
-            String tPregunta = preguntarPregunta(pregunta, tRespuesta, data);
+            String dataRespuesta = tRespuesta.getText().trim();
+            TextField tPregunta = preguntarPregunta(pregunta, dataRespuesta, data);
             
             respuesta.getChildren().clear();
             contenedorMejoras.getChildren().clear();
@@ -263,9 +274,16 @@ public class Adivinador {
             btn_sgte.setOnMouseClicked((ex)->{
                 VBox vBlugar = new VBox();
 
-                String respuestaLugar = asignarLugarNodo(vBlugar, tRespuesta, tPregunta);
+                String dataPregunta = tPregunta.getText().trim();
                 
-                //llamar al metodo que me enlaza el subarbol y me lo guarda
+                Boolean respuestaLugar = asignarLugarNodo(vBlugar, dataRespuesta, dataPregunta);
+                
+                System.out.println("Node antes de actualizar: "+node.getData());
+                
+                arbol.actualizarNodos(node, dataPregunta, dataRespuesta, respuestaLugar);
+                //llamar al metodo que me guarda el arbol
+                
+                System.out.println("Node izq de actualizar: "+node.getLeft().getData());
                 
                 pregunta.getChildren().clear();
                 contenedorMejoras.getChildren().clear();
@@ -273,25 +291,21 @@ public class Adivinador {
             });
         });
         
-        
-        
         return contenedorMejoras;
     }
     
-    public String preguntarAnimal(VBox contenedor){
+    public TextField preguntarAnimal(VBox contenedor){
         Label rUser = new Label("Que animal estabas pensando? ");
         TextField tRespuesta = new TextField();
 
         contenedor.getChildren().addAll(rUser, tRespuesta);
         contenedor.setAlignment(Pos.CENTER);
         contenedor.setSpacing(15);
-        
-        String data = tRespuesta.getText().trim();
-        System.out.println(data);
-        return data;
+
+        return tRespuesta;
     }
     
-    public String preguntarPregunta(VBox contenedor, String dataRespuestaUser, String dataNodo){
+    public TextField preguntarPregunta(VBox contenedor, String dataRespuestaUser, String dataNodo){
         Label pUser = new Label("Escribe una pregunta que me permita diferenciar entre\n "+dataRespuestaUser+ " y "+dataNodo+": ");
         TextField tPregunta = new TextField();
         
@@ -299,28 +313,15 @@ public class Adivinador {
         contenedor.setAlignment(Pos.CENTER);
         contenedor.setSpacing(15);
         
-        return tPregunta.getText().trim();
+        return tPregunta;
     }
     
-    public String asignarLugarNodo(VBox contenedor, String dataRespuestaUser, String pregunta){
-        String respt= "";
+    public Boolean asignarLugarNodo(VBox contenedor, String dataRespuestaUser, String pregunta){
         Label lLugar = new Label("Para "+dataRespuestaUser+", la respuesta a la pregunta: “"+pregunta+"”, es si o no?");
         
         HBox opciones = new HBox();
         Label si = new Label("SI"); si.getStyleClass().add("OpSi"); si.setTextFill(Color.web("#333333")); si.setFont(theFontSubtitle);
         Label no = new Label("NO"); no.getStyleClass().add("OpNo"); no.setTextFill(Color.web("#333333")); no.setFont(theFontSubtitle);
-        
-        si.setOnMouseClicked((e)->{
-            String r = "SI";
-            //obtenerResultado(respt,r);
-           
-            
-        });
-        
-        no.setOnMouseClicked((e)->{
-            //respt = "NO";
-            
-        });
         
         
         opciones.getChildren().addAll(si, no);
@@ -331,12 +332,33 @@ public class Adivinador {
         contenedor.setAlignment(Pos.CENTER);
         contenedor.setSpacing(15);
         
+        si.setOnMouseClicked((e)->{
+            respt = true;
+            contenedor.getChildren().clear();
+            //contenedorMejoras.getChildren().clear();
+            contenedor.getChildren().add(mostrarAgradecimiento());
+        });
+        
+        no.setOnMouseClicked((e)->{
+            respt = false; 
+            contenedor.getChildren().clear();
+            //contenedorMejoras.getChildren().clear();
+            contenedor.getChildren().add(mostrarAgradecimiento());
+        });
+         
         return respt;
     }
     
-    public boolean obtenerResultado(String parametro, String d){
-        parametro = d;
-        return true;
+    public VBox mostrarAgradecimiento(){
+        VBox vB = new VBox();
+        Label l = new Label("Gracias por ayudarme a mejorar");
+        
+        vB.getChildren().addAll(l,volverAJugar());
+        vB.setAlignment(Pos.CENTER);
+        vB.setSpacing(20);
+        
+        
+        return vB;
     }
     
 }
