@@ -139,9 +139,9 @@ public class AnimalTree {
                     else if(i>=a.size()){
                         for(int j=i; j<b.size();j++){
                             if(b.get(i).trim().endsWith("?"))
-                                bw.write("#P "+ b.get(i)+"\n");
+                                bw.write("#P "+ b.get(j)+"\n");
                             else
-                                bw.write("#R "+ b.get(i)+"\n");
+                                bw.write("#R "+ b.get(j)+"\n");
                         }
                     }
                     //else que agrega las preguntas y respuestas que no se encuentran en el txt
