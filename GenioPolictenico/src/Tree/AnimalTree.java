@@ -127,6 +127,7 @@ public class AnimalTree {
         List<String> a=leerArchivo();
         //Almacenamiento de las preguntas y respuestas del nodo root en una lista en posorden
         List<String> b=postorden(root);
+        System.out.println(b);
         if(archivo.exists()) {
             try {
                 bw = new BufferedWriter(new FileWriter(archivo,true));
@@ -157,6 +158,10 @@ public class AnimalTree {
                 Logger.getLogger(AnimalTree.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+    }
+    
+    public static void main(String[] arg){
         
     }
 

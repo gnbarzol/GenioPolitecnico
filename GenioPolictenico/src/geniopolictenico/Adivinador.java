@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -27,6 +28,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -262,30 +264,42 @@ public class Adivinador {
         contenedorMejoras.setAlignment(Pos.CENTER);
         contenedorMejoras.setSpacing(20);
         
-                
+        
+        
         btn_sgt.setOnMouseClicked((e)->{
-            VBox pregunta = new VBox();
-            Button btn_sgte = new Button("Continuar");
-            btn_sgte.getStyleClass().add("myButton");
-            
-            String dataRespuesta = tRespuesta.getText().trim();
-            TextField tPregunta = preguntarPregunta(pregunta, dataRespuesta, data);
-            
-            respuesta.getChildren().clear();
-            contenedorMejoras.getChildren().clear();
-            contenedorMejoras.getChildren().addAll(pregunta, btn_sgte);
-            
-            btn_sgte.setOnMouseClicked((ex)->{
-                VBox vBlugar = new VBox();
+            if(!tRespuesta.getText().trim().equals("")){
+                VBox pregunta = new VBox();
+                Button btn_sgte = new Button("Continuar");
+                btn_sgte.getStyleClass().add("myButton");
 
-                String dataPregunta = tPregunta.getText().trim();
-                
-                asignarLugarNodo(vBlugar, dataRespuesta, dataPregunta);
-                
-                pregunta.getChildren().clear();
+                String dataRespuesta = tRespuesta.getText().trim();
+                TextField tPregunta = preguntarPregunta(pregunta, dataRespuesta, data);
+
+                respuesta.getChildren().clear();
                 contenedorMejoras.getChildren().clear();
-                contenedorMejoras.getChildren().addAll(vBlugar);
-            });
+                contenedorMejoras.getChildren().addAll(pregunta, btn_sgte);
+
+                btn_sgte.setOnMouseClicked((ex)->{
+                    if(!tPregunta.getText().trim().equals("")){
+                        VBox vBlugar = new VBox();
+
+                        String dataPregunta = tPregunta.getText().trim();
+
+                        if(!dataPregunta.endsWith("?"))
+                            dataPregunta += "?";
+                        
+                        asignarLugarNodo(vBlugar, dataRespuesta, dataPregunta);
+
+                        pregunta.getChildren().clear();
+                        contenedorMejoras.getChildren().clear();
+                        contenedorMejoras.getChildren().addAll(vBlugar);
+                    }else{
+                        mensajeAlerta("Escriba la pregunta que permita diferenciar tu respuesta"); 
+                    }
+                });
+            }else{
+                mensajeAlerta("Escriba el animal que estaba pensando");
+            }
         });
         
         return contenedorMejoras;
@@ -362,6 +376,15 @@ public class Adivinador {
         
         
         return vAgradecimiento;
+    }
+    
+    public void mensajeAlerta(String name){
+        Alert alerta= new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Ventana de Alerta");
+        alerta.setHeaderText(null);
+        alerta.setContentText(name);
+        alerta.initStyle(StageStyle.UTILITY);
+        alerta.showAndWait();
     }
     
     
