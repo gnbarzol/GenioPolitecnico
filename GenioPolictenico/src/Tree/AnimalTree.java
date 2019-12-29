@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class AnimalTree {
     private Node root;
-   
+    private List<String> nodos;
     
     public AnimalTree() {
         this.root =cargarArbol(leerArchivo());
@@ -102,20 +102,21 @@ public class AnimalTree {
         
     }
     
-      public List<String> postorden(Node a){
-        List<String> nodos=new ArrayList<>();
-        if(!vacioArbol(a)){
-            postorden(a.getLeft());
-            postorden(a.getRight());
-            nodos.add((String)a.getData());
-        }
-        return nodos;
+    public void posOrden(){
+        posOrden(root);
     }
-    
-      public boolean vacioArbol(Node a)//Metodo para saber si el arbol esta completamente vacio
-    {
-        return (a == null);          
-    }
+
+//metodo recursivo para recorrido posorden
+
+    private void posOrden(Node nodo){
+        if (nodo == null)
+            return;
+        posOrden(nodo.getLeft());
+        posOrden(nodo.getRight());
+        nodos.add((String)nodo.getData());
+}
+
+
     
     public void guardarArbol(Node arbol){
         //Metodo que leerla el arbol pasado por parametro en pos-orden
@@ -126,29 +127,29 @@ public class AnimalTree {
         //Almacenamiento de las preguntas y respuestas contenidas en el archivo txt en una lista en posorden 
         List<String> a=leerArchivo();
         //Almacenamiento de las preguntas y respuestas del nodo root en una lista en posorden
-        List<String> b=postorden(root);
+        posOrden(root);
         if(archivo.exists()) {
             try {
                 bw = new BufferedWriter(new FileWriter(archivo,true));
                 //recorrido de las lista a para comprar con los elementos de b
                 for(int i=0; i<a.size();i++){
                     // si son iguales solo se agrega
-                    if(a.get(i).substring(2).trim().equals(b.get(i).trim()))
+                    if(a.get(i).substring(2).trim().equals(nodos.get(i).trim()))
                         bw.write(a.get(i)+"\n");
                     //else if para coger los elementos sobrantes de b
                     else if(i>=a.size()){
-                        for(int j=i; j<b.size();j++){
-                            if(b.get(i).trim().endsWith("?"))
-                                bw.write("#P "+ b.get(j)+"\n");
+                        for(int j=i; j<nodos.size();j++){
+                            if(nodos.get(i).trim().endsWith("?"))
+                                bw.write("#P "+ nodos.get(j)+"\n");
                             else
-                                bw.write("#R "+ b.get(j)+"\n");
+                                bw.write("#R "+ nodos.get(j)+"\n");
                         }
                     }
                     //else que agrega las preguntas y respuestas que no se encuentran en el txt
                     else{
-                        bw.write("#R "+b.get(i)+"\n");
-                        bw.write("#R "+b.get(i+1)+"\n");
-                        bw.write("#P "+b.get(i+2)+"\n");
+                        bw.write("#R "+nodos.get(i)+"\n");
+                        bw.write("#R "+nodos.get(i+1)+"\n");
+                        bw.write("#P "+nodos.get(i+2)+"\n");
                         i=i+3;
                     } 
                 }
