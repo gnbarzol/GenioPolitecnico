@@ -31,7 +31,7 @@ public class AnimalTree {
     
     public AnimalTree() {
         this.root =cargarArbol(leerArchivo());
-        nodos = new ArrayList<>();
+        
     }
     
     public final List<String> leerArchivo(){
@@ -161,13 +161,23 @@ public class AnimalTree {
         } catch (IOException ex) {
             Logger.getLogger(AnimalTree.class.getName()).log(Level.SEVERE, null, ex);
         }*/
-        
-        
-        File archivo = new File("src/resources/Clientes.txt");
+        nodos = new ArrayList<>();
+        posOrden(root);
+        File archivo = new File("src/Recursos/datos-1.txt");
         if(archivo.exists())
             archivo.delete();
         try(BufferedWriter bw= new BufferedWriter(new FileWriter(archivo))){
-             //
+            for(String dataNodo: nodos){
+                if(dataNodo.endsWith("?")){
+                    System.out.println("#P " + dataNodo);
+                    bw.write("#P " + dataNodo);
+                    bw.newLine();
+                }else{
+                    System.out.println("#R " + dataNodo);
+                    bw.write("#R " + dataNodo);
+                    bw.newLine();
+                }
+            }
         }catch(IOException e){
             System.out.println("Error inesperado en la clase: "+getClass());
         } 
