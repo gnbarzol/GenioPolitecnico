@@ -34,6 +34,11 @@ public class AnimalTree {
         
     }
     
+    /**
+     * 
+     * @return Me retorna una lista con los datos de los nodos que se 
+     * encuentran en el archivo.txt
+     */
     public final List<String> leerArchivo(){
         List<String> data= new ArrayList();
         try(BufferedReader br= new BufferedReader(new FileReader("src/Recursos/datos-1.txt"))){
@@ -49,11 +54,11 @@ public class AnimalTree {
         return data;
     }
     
-    
-        
-    
-    
-   
+    /**
+     * 
+     * @param lista con los datos de todos los nodos
+     * @return Un arbol creado a partir de la lista de dataNodos
+     */
     public final Node cargarArbol(List<String> lista){
         Deque<Node> pila = new LinkedList<>();
         for(int i=0; i<lista.size();i++){
@@ -82,7 +87,6 @@ public class AnimalTree {
     }
     
     /**
-     * 
      * @param node Es el nodo que va a ser sustituido por el nuevo subArbol creado
      * @param pregunta Es la pregunta que el usuario formula para identificar la respuesta(Nueva Raiz)
      * @param respuesta, es la respuesta(Hoja) de la nueva raiz formada de la pregunta
@@ -99,15 +103,16 @@ public class AnimalTree {
             node.setRight(r);
             node.setLeft(antiguoNode);            
         }
-        guardarArbol(root);
+        guardarArbol();
         
     }
     
+    /**
+     * Metodo que leerla el arbol pasado por parametro en pos-orden
+     */
     public void posOrden(){
         posOrden(root);
     }
-
-//metodo recursivo para recorrido posorden
 
     private void posOrden(Node nodo){
         if (nodo == null)
@@ -118,49 +123,10 @@ public class AnimalTree {
 }
 
 
-    
-    public void guardarArbol(Node arbol){
-        //Metodo que leerla el arbol pasado por parametro en pos-orden
-        // y lo añadira al archivo de datos-1.txt.
-        /*String ruta = "src/Recursos/datos-1.txt";
-        File archivo = new File(ruta);
-        BufferedWriter bw;
-        //Almacenamiento de las preguntas y respuestas contenidas en el archivo txt en una lista en posorden 
-        List<String> a=leerArchivo();
-        //Almacenamiento de las preguntas y respuestas del nodo root en una lista en posorden
-
-        posOrden(root);
-        System.out.println(nodos);
-        if(archivo.exists())
-            archivo.delete();
-        try {
-            bw = new BufferedWriter(new FileWriter(archivo));
-            //recorrido de las lista a para comprar con los elementos de b
-            for(int i=0; i<a.size();i++){
-                // si son iguales solo se agrega
-                if(a.get(i).substring(2).trim().equals(nodos.get(i).trim()))
-                    bw.write(a.get(i)+"\n");
-                //else if para coger los elementos sobrantes de b
-                else if(i>=a.size()){
-                    for(int j=i; j<nodos.size();j++){
-                        if(nodos.get(i).trim().endsWith("?"))
-                            bw.write("#P "+ nodos.get(j)+"\n");
-                        else
-                            bw.write("#R "+ nodos.get(j)+"\n");
-                    }
-                }
-                //else que agrega las preguntas y respuestas que no se encuentran en el txt
-                else{
-                    bw.write("#R "+nodos.get(i)+"\n");
-                    bw.write("#R "+nodos.get(i+1)+"\n");
-                    bw.write("#P "+nodos.get(i+2)+"\n");
-                    i=i+3;
-                } 
-            }
-            bw.close();
-        } catch (IOException ex) {
-            Logger.getLogger(AnimalTree.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+    /**
+     * Me reescribe el archivo .txt con los nodos actualizados
+     */
+    public void guardarArbol(){
         nodos = new ArrayList<>();
         posOrden(root);
         File archivo = new File("src/Recursos/datos-1.txt");
@@ -169,11 +135,9 @@ public class AnimalTree {
         try(BufferedWriter bw= new BufferedWriter(new FileWriter(archivo))){
             for(String dataNodo: nodos){
                 if(dataNodo.endsWith("?")){
-                    System.out.println("#P " + dataNodo);
                     bw.write("#P " + dataNodo);
                     bw.newLine();
                 }else{
-                    System.out.println("#R " + dataNodo);
                     bw.write("#R " + dataNodo);
                     bw.newLine();
                 }
@@ -184,10 +148,5 @@ public class AnimalTree {
         
         
     }
-    
-    public static void main(String[] arg){
-        
-    }
-
     
 }

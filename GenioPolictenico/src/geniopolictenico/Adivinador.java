@@ -39,9 +39,9 @@ public class Adivinador {
     private final Font theFontSubtitle = Font.font("Helvetica", FontWeight.BOLD, 18 );
     private final AnimalTree arbol;
     private Node node;
-    private Label lPregunta;
-    private VBox contenidoPreguntas;
-    private VBox contenedorMejoras;
+    private final Label lPregunta;
+    private final VBox contenidoPreguntas;
+    private final VBox contenedorMejoras;
     
     public Adivinador(){
         contenedorMejoras= new VBox();
