@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -129,9 +131,14 @@ public class AnimalTree {
     public void guardarArbol(){
         nodos = new ArrayList<>();
         posOrden(root);
-        File archivo = new File("src/Recursos/datos-1.txt");
+        String path = "src/Recursos/datos-1.txt";
+        File archivo = new File(path);
         if(archivo.exists())
-            archivo.delete();
+            try {
+                Files.delete(Paths.get(path));
+        } catch (IOException ex) {
+            Logger.getLogger(AnimalTree.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try(BufferedWriter bw= new BufferedWriter(new FileWriter(archivo))){
             for(String dataNodo: nodos){
                 if(dataNodo.endsWith("?")){
